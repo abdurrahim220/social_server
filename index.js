@@ -8,7 +8,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from 'path';
 import { fileURLToPath } from "url";
+import authRoutes from './routes/auth.js'
 import { register } from './controllers/auth.js'
+import { verifyToken } from "./middleware/auth.js";
 
 // configurations
 
@@ -42,11 +44,14 @@ const upload = multer({ storage });
 
 // routes with files
 
-app.post('/auth/register', upload.single("picture"), register);
+app.post('/auth/register', upload.single("picture"), verifyToken, register);
+
+
+app.use("/auth", authRoutes);
 
 
 
-// mongooes set up
+// mongoes set up
 
 const PORT = process.env.PORT || 6001
 
